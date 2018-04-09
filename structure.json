@@ -1,0 +1,35 @@
+{
+  "signup": {
+    "client": {
+      "username": "name",
+      "password": "pass"
+    },
+    "server": {
+      "message": "msg"
+    }
+  },
+  "login": {
+    "client": {
+      "username": "name",
+      "password": "pass"
+    },
+    "server": {
+      "session": "id",
+      "message": "msg"
+    }
+  },
+  "array": [
+    1,
+    2,
+    3
+  ],
+  "boolean": true,
+  "null": null,
+  "number": 123,
+  "object": {
+    "a": "b",
+    "c": "d",
+    "e": "f"
+  },
+  "string": "Hello World"
+}
