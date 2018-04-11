@@ -19,5 +19,5 @@
         <activity android:name="pt.ulisboa.tecnico.cmu.proj.Sign_InActivity" />
         <activity android:name="pt.ulisboa.tecnico.cmu.proj.programActivity"></activity>
     </application>
-
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

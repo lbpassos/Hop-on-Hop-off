@@ -1,13 +1,21 @@
 package pt.ulisboa.tecnico.cmu.proj;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import pt.ulisboa.tecnico.cmu.proj.command.Command;
+import pt.ulisboa.tecnico.cmu.proj.command.LoginCommand;
+import pt.ulisboa.tecnico.cmu.proj.command.SignInCommand;
+import pt.ulisboa.tecnico.cmu.proj.dummyclient.asynctask.DummyTask;
 
 public class Sign_InActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -16,8 +24,7 @@ public class Sign_InActivity extends AppCompatActivity implements View.OnClickLi
     private Button button_signIn;
     private Button button_cancel;
 
-    private webserver_simulator wb;
-    private int res;
+    private Command c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +38,8 @@ public class Sign_InActivity extends AppCompatActivity implements View.OnClickLi
         button_cancel = findViewById(R.id.btn_cancel);
         button_cancel.setOnClickListener(this);
 
-        Intent i = getIntent();
-        wb = (webserver_simulator)i.getSerializableExtra("webserverObject");
+        //Intent i = getIntent();
+        //wb = (webserver_simulator)i.getSerializableExtra("webserverObject");
 
     }
 
@@ -62,9 +69,13 @@ public class Sign_InActivity extends AppCompatActivity implements View.OnClickLi
                     return;
                 }
 
+                String json = JsonHandler.LoginToServer(user, code);
+                Log.d("-----Mainactivity----- Json", json);
+                c = new SignInCommand( json );
+                new DummyTask(Sign_InActivity.this, c).execute();
         /* ****************************************************** */
         /* *******Send message to authenticate in webserver****** */
-                final ProgressDialog progressDialog;
+                /*final ProgressDialog progressDialog;
                 progressDialog = new ProgressDialog(this, R.style.Theme_AppCompat_DayNight_Dialog_Alert);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setMessage("Authenticating...");
@@ -79,7 +90,7 @@ public class Sign_InActivity extends AppCompatActivity implements View.OnClickLi
                                 progressDialog.dismiss();
                             }
                         },5000
-                );
+                );*/
 
         /* Check authentication and open new app */
 
@@ -87,22 +98,45 @@ public class Sign_InActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    public void process_Autentication(String user, String code){
-        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+    public void updateInterface(String reply) {
+        String[] t= JsonHandler.LoginFromServer(reply);
+        Log.d("-----Mainactivity----- SessionID", t[0]);
+        Log.d("-----Mainactivity----- Message", t[1]);
 
-        res = wb.authenticate(user, code); //simulate server
-        if( res==0 ){
-            dlgAlert.setTitle("User Already Exists");
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+        if(t[0].equals("0")){ //No session id
+            dlgAlert.setTitle("Sign In Error");
+            dlgAlert.setMessage(t[1]);
+            dlgAlert.create().show();
         }
         else{
-            if(res==-1) {
-                dlgAlert.setTitle("Invalid Code");
-                dlgAlert.setMessage("Please Check the Code");
-            }
-        }
-        if(res!=1){
-            dlgAlert.create().show();
-            return;
+            //Intent intent = new Intent(Sign_InActivity.this, MainActivity.class);
+            //intent.putExtra("session_id", t[0]);
+            //intent.putExtra("User", user);
+            dlgAlert.setTitle("Sign In Success");
+            dlgAlert.setMessage(t[1]);
+            //dlgAlert.create().show();
+
+            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+
+                    //Intent intent = new Intent(this, Menu.class);
+                    Log.d("----- Sign_InActivity ------", "AQUI");
+                    Intent intent = new Intent(Sign_InActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
+            AlertDialog dialog = dlgAlert.create();
+            dialog.setCanceledOnTouchOutside(false);
+            //dlgAlert.create().show();
+            dialog.show();
+
+
+
+            //startActivity(intent);
+            //finish();
         }
     }
 }

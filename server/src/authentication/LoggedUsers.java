@@ -4,22 +4,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoggedUsers {
-	private Map<User,Integer> logsIn;
+	private Map<User,String> logsIn;
 	
 	public LoggedUsers() {
-		logsIn = new HashMap<User,Integer>();
+		logsIn = new HashMap<User,String>();
 	}
 	
-	public boolean insertLogIn(User u, int sid) {
+	public boolean insertLogIn(User u, String session_id) {
 		if(logsIn.containsKey(u)==true) {
 			return false;
 		}
-		logsIn.put(u, sid);
+		logsIn.put(u, session_id);
 		return true;
 	}
 	
 	public void removeFromLog(User u) {
 		logsIn.remove(u);
+	}
+	
+	public boolean userAlreadyLogin(String user, String code) {
+		User tmp = new User(user, code);
+		
+		if( logsIn.containsKey(tmp)==true ) {
+			return true;
+		}
+		return false;
 	}
 
 }

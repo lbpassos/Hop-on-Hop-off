@@ -1,13 +1,10 @@
 package authentication;
 
 public class SessionId {
-	private static long session_id;
+	private static long session_id = 0;
 	
-	public SessionId() {
-		session_id = 0;
-	}
-	
-	public long getAnotherSession() {
+		
+	public static long getAnotherSession() {
 		return ++session_id;
 	}
 

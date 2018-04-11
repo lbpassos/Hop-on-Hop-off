@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import java.io.Serializable;
 
+import pt.ulisboa.tecnico.cmu.proj.command.Command;
+import pt.ulisboa.tecnico.cmu.proj.command.LoginCommand;
 import pt.ulisboa.tecnico.cmu.proj.dummyclient.asynctask.DummyTask;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -26,8 +28,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText text_code;
     private Button button_login;
 
-    private webserver_simulator wb;
-    private int res;
+    //private webserver_simulator wb;
+    //private int res;
+    private Command c;
+    private String user;
+    private String code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +45,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         text_code = findViewById(R.id.input_code);
         button_login = findViewById(R.id.btn_login);
         button_login.setOnClickListener(this);
-
-
 
 
         //Sign In
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         Log.d("MY DEBUG", "I'm on Click");
 
-        final String user, code;
+        //final String user, code;
         AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
 
         user = text_username.getText().toString();
@@ -93,9 +96,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /* *******Send message to authenticate in webserver****** */
 
         //Start the communication task in background
-        new DummyTask(MainActivity.this).execute();
+        //Log.d("-----Mainactivity----- User", user);
+        //Log.d("-----Mainactivity----- Code", code);
+        String json = JsonHandler.LoginToServer(user, code);
+        Log.d("-----Mainactivity----- Json", json);
+        c = new LoginCommand( json );
+        new DummyTask(MainActivity.this, c).execute();
 
-        final ProgressDialog progressDialog;
+        /*final ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(this, R.style.Theme_AppCompat_DayNight_Dialog_Alert);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
@@ -106,11 +114,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new Runnable(){
                     @Override
                     public void run() {
-                        process_Autentication( user, code);
+                        //process_Autentication( user, code);
                         progressDialog.dismiss();
                     }
                 },5000
-        );
+        );*/
 
 
         /* Check authentication and open new app */
@@ -123,8 +131,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    public void updateInterface(String reply) {
+        String[] t= JsonHandler.LoginFromServer(reply);
+        Log.d("-----Mainactivity----- SessionID", t[0]);
+        Log.d("-----Mainactivity----- Message", t[1]);
 
-    public void process_Autentication(String user, String code){
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+        if(t[0].equals("0")){ //No session id
+            dlgAlert.setTitle("Login Error");
+            dlgAlert.setMessage(t[1]);
+            dlgAlert.create().show();
+        }
+        else{
+            Intent intent = new Intent(MainActivity.this, programActivity.class);
+            intent.putExtra("session_id", t[0]);
+            intent.putExtra("User", user);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    /*public void process_Autentication(String user, String code){
         AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
 
         res = wb.authenticate(user, code); //simulate server
@@ -149,5 +176,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
             finish();
         }
-    }
+    }*/
 }

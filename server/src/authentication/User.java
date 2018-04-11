@@ -10,9 +10,9 @@ public class User {
 	//private int count;
 	private QuestionsByMonument current;
 	private String name;
-	private int code;
+	private String code;
 	
-	public User(String name, int code) {
+	public User(String name, String code) {
 		numberOfCorrectAnswers = 0;
 		totalNumberOfAnswers = 0;
 		
@@ -25,7 +25,7 @@ public class User {
 		return name;
 	}
 	
-	public int getCode() {
+	public String getCode() {
 		return code;
 	}
 	
@@ -46,10 +46,15 @@ public class User {
 			return false;
 		}
 		User otherUser = (User)other;
-		if( this.getName().equals(otherUser.getName()) && this.getCode()==otherUser.getCode() ) {
+					
+		if( this.getName().equals(otherUser.getName()) && this.getCode().equals(otherUser.getCode()) ) {
 			return true;
 		}
 		return false;
+	}
+	@Override
+	public int hashCode() {
+		return name.hashCode()+code.hashCode();
 	}
 	
 }
