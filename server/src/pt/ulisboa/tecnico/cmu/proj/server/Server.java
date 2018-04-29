@@ -10,6 +10,7 @@ import algorithm_data.Questions.QuestionsByMonument;
 import algorithm_data.Questions.TotalRanking;
 import authentication.Authentication;
 import authentication.LoggedUsers;
+import authentication.SessionId;
 import authentication.User;
 import authentication.UsersInSystem;
 import pt.ulisboa.tecnico.cmu.proj.command.Command;
@@ -52,6 +53,11 @@ public class Server {
 		/* Init Total Ranking */
 		ranking = new TotalRanking();
 		
+		
+		System.out.println(SessionId.getAnotherSession());
+		System.out.println(SessionId.getAnotherSession());
+		System.out.println(SessionId.getAnotherSession());
+		System.out.println(SessionId.getAnotherSession());
 		
 		
 		/* TEST insert user */
