@@ -5,6 +5,8 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import algorithm_data.Questions.Monument;
+import algorithm_data.Questions.QuestionsByMonument;
 import authentication.Authentication;
 import authentication.LoggedUsers;
 import authentication.User;
@@ -16,10 +18,12 @@ public class Server {
 	
 	private static final int PORT = 9090;
 	
+	/* Global variables */
 	public static LoggedUsers loggedInUsers; //Users Logged
 	public static Authentication collectionUsersPasswordInSystem; //Users(string) and associate passwords
 	public static UsersInSystem users; //Users(objects) 
-	
+	public static Monument[] monuments;
+	public static QuestionsByMonument[] quizzes;
 	
 
 	public static void main(String[] args) throws Exception {
@@ -30,6 +34,17 @@ public class Server {
 		loggedInUsers = new LoggedUsers(); //Users Logged
 		collectionUsersPasswordInSystem = new Authentication(); //Users(string) and associate passwords
 		users = new UsersInSystem(); //Users(objects) 
+		
+		/* Init Monuments */
+		monuments = Init_Monuments.initialize();
+		if(monuments==null) {
+			socket.close();
+			return;
+		}
+		/* Init Quizzes */
+		quizzes = Init_Quizzes.initialize(monuments);
+		
+		
 		
 		/* TEST insert user */
 		User u1 = new User("hi","123");
@@ -51,6 +66,7 @@ public class Server {
 		while (true) {
 			try {
 			client = socket.accept();
+			
 			
 			ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
 			Command cmd =  (Command) ois.readObject();

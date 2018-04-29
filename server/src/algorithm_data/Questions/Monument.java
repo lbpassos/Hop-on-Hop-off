@@ -1,15 +1,15 @@
 package algorithm_data.Questions;
 
 public class Monument {
-	private int id;
+	private String id;
 	private String description;
 	
-	public Monument(int id, String val) {
+	public Monument(String id, String val) {
 		this.id = id;
 		description = val;
 	}
 
-	public int getMonumentID() {
+	public String getMonumentID() {
 		return id;
 	}
 	

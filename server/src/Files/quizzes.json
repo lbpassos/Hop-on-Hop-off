@@ -1,0 +1,132 @@
+{
+  "quizzes": [
+    {
+      "quiz": {
+        "monument id": "1",
+        "questions": [
+          {
+            "q": "In which year was the Zoo founded?",
+            "options": [
+              {
+                "choice": "1871",
+                "correct": false
+              },
+              {
+                "choice": "1884",
+                "correct": true
+              },
+              {
+                "choice": "1894",
+                "correct": false
+              },
+              {
+                "choice": "1900",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "q": "Which animal was born last year?",
+            "options": [
+              {
+                "choice": "A lion",
+                "correct": false
+              },
+              {
+                "choice": "A dolphin",
+                "correct": false
+              },
+              {
+                "choice": "A giraffe",
+                "correct": true
+              },
+              {
+                "choice": "A bear",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "q": "Q3 empty",
+            "options": [],
+            "answer": []
+          },
+          {
+            "q": "Q4 empty",
+            "options": [],
+            "answer": []
+          },
+          {
+            "q": "Q4 empty",
+            "options": [],
+            "answer": []
+          }
+        ]
+      }
+    },
+    {
+      "quiz": {
+        "monument id": "1",
+        "questions": [
+          {
+            "q": "In which year was the Zoo founded?",
+            "options": [
+              {
+                "choice": "1871",
+                "correct": false
+              },
+              {
+                "choice": "1884",
+                "correct": true
+              },
+              {
+                "choice": "1894",
+                "correct": true
+              },
+              {
+                "choice": "1900",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "q": "Which animal was born last year?",
+            "options": [
+              {
+                "choice": "A lion",
+                "correct": false
+              },
+              {
+                "choice": "A dolphin",
+                "correct": false
+              },
+              {
+                "choice": "A giraffe",
+                "correct": true
+              },
+              {
+                "choice": "A bear",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "q": "Q3 empty",
+            "options": [],
+            "answer": []
+          },
+          {
+            "q": "Q4 empty",
+            "options": [],
+            "answer": []
+          },
+          {
+            "q": "Q4 empty",
+            "options": [],
+            "answer": []
+          }
+        ]
+      }
+    }
+  ]
+}
