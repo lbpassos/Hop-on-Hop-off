@@ -3,16 +3,16 @@ package algorithm_data.Questions;
 import authentication.User;
 
 public class Ranking {
-	private User user;
+	private String username;
 	private int points;
 	
-	public Ranking(User u, int p) {
-		user = u;
+	public Ranking(String u, int p) {
+		username = u;
 		points = p;
 	}
 
 	public String getUser() {
-		return user.getName();
+		return username;
 	}
 	public int getPoints() {
 		return points;

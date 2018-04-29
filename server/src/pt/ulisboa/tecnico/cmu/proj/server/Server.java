@@ -7,6 +7,7 @@ import java.net.Socket;
 
 import algorithm_data.Questions.Monument;
 import algorithm_data.Questions.QuestionsByMonument;
+import algorithm_data.Questions.TotalRanking;
 import authentication.Authentication;
 import authentication.LoggedUsers;
 import authentication.User;
@@ -24,7 +25,7 @@ public class Server {
 	public static UsersInSystem users; //Users(objects) 
 	public static Monument[] monuments;
 	public static QuestionsByMonument[] quizzes;
-	
+	public static TotalRanking ranking;
 
 	public static void main(String[] args) throws Exception {
 		CommandHandlerImpl chi = new CommandHandlerImpl();
@@ -43,6 +44,13 @@ public class Server {
 		}
 		/* Init Quizzes */
 		quizzes = Init_Quizzes.initialize(monuments);
+		if(quizzes==null) {
+			socket.close();
+			return;
+		}
+		
+		/* Init Total Ranking */
+		ranking = new TotalRanking();
 		
 		
 		

@@ -3,7 +3,9 @@ package algorithm_data.Questions;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-class CompareByMonument implements Comparator<IndividualPoints> {
+import authentication.User;
+
+class CompareByMonument implements Comparator<User> {
 	private Monument m;
 	
 	public CompareByMonument(Monument m) {
@@ -11,7 +13,10 @@ class CompareByMonument implements Comparator<IndividualPoints> {
 	}
 	
 	@Override
-    public int compare(IndividualPoints o1, IndividualPoints o2) {
+    public int compare(User u1, User u2) {
+		IndividualPoints o1 = u1.getPoints();
+		IndividualPoints o2 = u2.getPoints();
+		
 		if(o1.getNumberOfCorrectQuestionsAnswered(m)>o2.getNumberOfCorrectQuestionsAnswered(m)) {
 			return 1;
 		}
@@ -22,10 +27,13 @@ class CompareByMonument implements Comparator<IndividualPoints> {
     }
 }
 
-class CompareByTotal implements Comparator<IndividualPoints> {
+class CompareByTotal implements Comparator<User> {
 		
 	@Override
-    public int compare(IndividualPoints o1, IndividualPoints o2) {
+    public int compare(User u1, User u2) {
+		IndividualPoints o1 = u1.getPoints();
+		IndividualPoints o2 = u2.getPoints();
+		
 		int total_o1 = o1.getTotalPoints();
 		int total_o2 = o2.getTotalPoints();
 		
@@ -40,13 +48,13 @@ class CompareByTotal implements Comparator<IndividualPoints> {
 }
 
 public class TotalRanking {
-	private ArrayList<IndividualPoints> total;
+	private ArrayList<User> total;
 	
 	public TotalRanking() {
-		total = new ArrayList<IndividualPoints>();
+		total = new ArrayList<User>();
 	}
 	
-	public void insert(IndividualPoints ip) {
+	public void insert(User ip) {
 		if( total.contains(ip)==true ) {
 			total.remove(ip);
 			total.add(ip);
@@ -60,8 +68,8 @@ public class TotalRanking {
 		
 		Ranking[] rank = new Ranking[total.size()];
 		for(int i=0; i<total.size(); ++i) {
-			IndividualPoints ip = total.get(i);
-			rank[i] = new Ranking(ip.getUser(), ip.getNumberOfCorrectQuestionsAnswered(m));
+			User ip = total.get(i);
+			rank[i] = new Ranking( ip.getName(), ip.getPoints().getNumberOfCorrectQuestionsAnswered(m));
 		}
 		return rank;		
 	}
@@ -71,8 +79,8 @@ public class TotalRanking {
 		
 		Ranking[] rank = new Ranking[total.size()];
 		for(int i=0; i<total.size(); ++i) {
-			IndividualPoints ip = total.get(i);
-			rank[i] = new Ranking(ip.getUser(), ip.getNumberOfCorrectQuestionsAnswered(m));
+			User ip = total.get(i);
+			rank[i] = new Ranking(ip.getName(), ip.getPoints().getNumberOfCorrectQuestionsAnswered(m));
 		}
 		return rank;		
 	}

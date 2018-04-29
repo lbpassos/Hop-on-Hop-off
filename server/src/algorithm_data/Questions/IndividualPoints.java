@@ -23,14 +23,14 @@ class Answers{
 	}
 }
 
-
+//Points by user
 public class IndividualPoints{
-	private User user;
+	//private User user;
 	//private ArrayList<Monument> monumentsVisited;
 	private Map<Monument, Answers> trip;
 	
-	public IndividualPoints(User u) {
-		user = u;
+	public IndividualPoints(/*User u*/) {
+		//user = u;
 		//monumentsVisited = new ArrayList<Monument>();
 		trip = new HashMap<Monument, Answers>();
 	}
@@ -64,11 +64,11 @@ public class IndividualPoints{
 		return total;
 	}
 	
-	public User getUser() {
+	/*public User getUser() {
 		return user;
-	}
+	}*/
 	
-	@Override
+	/*@Override
 	public boolean equals(Object other) {
 		if(this==other) {
 			return true;
@@ -82,6 +82,6 @@ public class IndividualPoints{
 			return true;
 		}
 		return false;
-	}
+	}*/
 
 }

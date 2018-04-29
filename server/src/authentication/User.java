@@ -1,5 +1,7 @@
 package authentication;
 
+import algorithm_data.Questions.IndividualPoints;
+import algorithm_data.Questions.Monument;
 import algorithm_data.Questions.QuestionsByMonument;
 
 //In working
@@ -7,12 +9,14 @@ import algorithm_data.Questions.QuestionsByMonument;
 public class User {
 	
 	private QuestionsByMonument current;
+	private IndividualPoints points;
 	private String name;
 	private String code;
 	
 	public User(String name, String code) {
 				
 		current = null;
+		points = new IndividualPoints();
 		this.name = name;
 		this.code = code;
 	}
@@ -32,6 +36,11 @@ public class User {
 	public QuestionsByMonument getQuestions() {
 		return current;
 	}
+	
+	public IndividualPoints getPoints() {
+		return points;
+	}
+	
 	
 	@Override
 	public boolean equals(Object other) {
