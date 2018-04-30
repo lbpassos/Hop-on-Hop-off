@@ -74,13 +74,13 @@ public class TotalRanking {
 		return rank;		
 	}
 	
-	public Ranking[] global(Monument m) {
+	public Ranking[] global() {
 		total.sort(new CompareByTotal() );
 		
 		Ranking[] rank = new Ranking[total.size()];
 		for(int i=0; i<total.size(); ++i) {
 			User ip = total.get(i);
-			rank[i] = new Ranking(ip.getName(), ip.getPoints().getNumberOfCorrectQuestionsAnswered(m));
+			rank[i] = new Ranking(ip.getName(), ip.getPoints().getTotalPoints() );
 		}
 		return rank;		
 	}

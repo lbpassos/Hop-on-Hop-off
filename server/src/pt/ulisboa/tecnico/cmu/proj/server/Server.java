@@ -8,6 +8,7 @@ import java.net.Socket;
 import algorithm_data.Questions.Monument;
 import algorithm_data.Questions.QuestionsByMonument;
 import algorithm_data.Questions.TotalRanking;
+import algorithm_data.Questions.Trip;
 import authentication.Authentication;
 import authentication.LoggedUsers;
 import authentication.SessionId;
@@ -27,6 +28,7 @@ public class Server {
 	public static Monument[] monuments;
 	public static QuestionsByMonument[] quizzes;
 	public static TotalRanking ranking;
+	public static Trip trip;
 
 	public static void main(String[] args) throws Exception {
 		CommandHandlerImpl chi = new CommandHandlerImpl();
@@ -53,11 +55,25 @@ public class Server {
 		/* Init Total Ranking */
 		ranking = new TotalRanking();
 		
+		/* Init Trip */
+		trip = new Trip();
+		Monument[] tmp = Init_Trip.initialize(monuments);
+		for(int i=0; i<tmp.length; ++i) {
+			trip.addStop(tmp[i], i);
+		}
+		trip.startTrip(); //waiting for customers in the first leg of the monument
 		
+		/*System.out.println(SessionId.getAnotherSession());
 		System.out.println(SessionId.getAnotherSession());
 		System.out.println(SessionId.getAnotherSession());
 		System.out.println(SessionId.getAnotherSession());
-		System.out.println(SessionId.getAnotherSession());
+		*/
+		
+		/* Testes */
+		/*String[] tm = {"eu sou", "o maior"};
+		String t = JsonHandler.ListCommandFromServer("15", tm);
+		String s = JsonHandler.ListCommandFromClient(t);
+		*/
 		
 		
 		/* TEST insert user */

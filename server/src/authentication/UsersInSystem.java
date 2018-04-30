@@ -21,6 +21,13 @@ public class UsersInSystem {
 		return users.get(idx);
 	}
 	
-	
+	public User checkExistance(String name) {
+		for(int i=0; i<users.size(); ++i) {
+			if( users.get(i).getName().equals(name) ) {
+				return users.get(i);
+			}
+		}
+		return null;
+	}
 		
 }

@@ -30,5 +30,14 @@ public class LoggedUsers {
 		}
 		return false;
 	}
+	
+	public boolean userSessionIDcompare(User user, String sid) {
+		if( logsIn.containsKey(user)==true ) {
+			if( logsIn.get(user).equals(sid) ) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 }
