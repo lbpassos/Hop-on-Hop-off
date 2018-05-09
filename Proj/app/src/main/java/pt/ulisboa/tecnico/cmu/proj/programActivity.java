@@ -1,6 +1,9 @@
 package pt.ulisboa.tecnico.cmu.proj;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,15 +14,31 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import pt.ulisboa.tecnico.cmu.proj.command.Command;
+import pt.ulisboa.tecnico.cmu.proj.command.LogOutCommand;
+import pt.ulisboa.tecnico.cmu.proj.dummyclient.asynctask.DummyTask;
+
 public class programActivity extends AppCompatActivity {
 
     private TextView title;
-    private webserver_simulator wb;
 
     private String[] tags;
     private ListView lv;
     private ArrayAdapter<String> itemsadapter;
     private int selectedItem;
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
+    private Command c;
+    private String user;
+    private String sid;
+
+    @Override
+    protected void onDestroy(){
+        editor.clear();
+        editor.commit(); // commit changes
+        super.onDestroy();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +46,15 @@ public class programActivity extends AppCompatActivity {
         setContentView(R.layout.activity_program);
 
 
+
         title = findViewById(R.id.title_text);
         Intent i = getIntent();
-        wb = (webserver_simulator)i.getSerializableExtra("webserverObject");
-        String user = i.getStringExtra("User");
+
+        pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        editor = pref.edit();
+
+        user = pref.getString("User", null);
+        sid = pref.getString("sessionId", null);
         title.setText("Hello " + user);
 
         tags = new String[] {
@@ -59,6 +83,7 @@ public class programActivity extends AppCompatActivity {
                 // Starting a new async task
                 switch(selectedItem){
                     case 0: // List Tour Locations
+
                         Log.d("ListView", "------ List Tour Locations");
                         break;
                     case 1: //Download Quiz
@@ -75,9 +100,8 @@ public class programActivity extends AppCompatActivity {
                         break;
                     case 5: //Log Out
                         //Terminate connection with the server
-                        Intent intent = new Intent(programActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
+                        logOut();
+
                         break;
                     default:
                         Log.d("ListView", "-----ERROR-----");
@@ -98,5 +122,43 @@ public class programActivity extends AppCompatActivity {
                 selectedItem = position;
             }
         });
+    }
+
+    public void updateInterface(String reply) {
+
+        String t= JsonHandler.LogOutFromServer(reply);
+        //Log.d("-----Mainactivity----- Message", t[1]);
+
+
+        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+        dlgAlert.setTitle("Log out");
+        dlgAlert.setMessage(t);
+
+        dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) { //destroy and back
+
+                //Intent intent = new Intent(this, Menu.class);
+                //Log.d("----- Sign_InActivity ------", "AQUI");
+                Intent intent = new Intent(programActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); //caller activity eliminated
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //this activity will become the start of a new task on this history stack.
+                startActivity(intent);
+            }
+        });
+
+        AlertDialog dialog = dlgAlert.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+    }
+
+    public void logOut(){
+        editor.clear();
+        editor.commit(); // commit changes
+
+        String json = JsonHandler.LogouToServer(user, sid);
+        c = new LogOutCommand( json );
+        new DummyTask(programActivity.this, c).execute();
+
     }
 }

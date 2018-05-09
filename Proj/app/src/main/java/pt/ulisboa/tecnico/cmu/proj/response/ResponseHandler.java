@@ -5,4 +5,5 @@ public interface ResponseHandler {
 
 	public void handle(LoginResponse hr);
 	public void handle(SignInResponse hr);
+	public void handle(LogOutResponse hr);
 }

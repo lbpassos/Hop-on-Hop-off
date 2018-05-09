@@ -101,7 +101,7 @@ public class JsonHandler {
     
     
     
-  //Decode JSON string received by List command
+  //Decode JSON string received by Logout command
     /* Format
      * 	{
   		"logout": 
@@ -215,5 +215,37 @@ public class JsonHandler {
     		e.printStackTrace();
     	}
     	return obj_t_header.toJSONString();	 	
+    }
+    
+    
+    /*
+    	{
+    	"download quiz": 
+    	  { "session id": "x",
+    	      "username": "XX",
+    	   "monument id": "xx"
+    	  }
+    	}
+    */
+    public static String[] DownloadQuizCommandFromClient(String command){
+    	String[] tmp = new String[3];
+        
+        JSONParser parser = new JSONParser();
+        try {
+        	Object obj = parser.parse(command);
+        	JSONArray array = new JSONArray();
+        	array.add(obj);
+        	JSONObject teste = (JSONObject)array.get(0);
+        	JSONObject teste_1 = (JSONObject)teste.get("download quiz");
+        	tmp[0] = teste_1.get("session id").toString();
+        	tmp[1] = teste_1.get("username").toString();
+        	tmp[2] = teste_1.get("monument id").toString();
+        }
+        catch(Exception e) {
+        	e.printStackTrace();
+        }
+        
+        return tmp;
+    	
     }
 }

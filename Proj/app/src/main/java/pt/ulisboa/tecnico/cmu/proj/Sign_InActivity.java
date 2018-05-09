@@ -38,8 +38,7 @@ public class Sign_InActivity extends AppCompatActivity implements View.OnClickLi
         button_cancel = findViewById(R.id.btn_cancel);
         button_cancel.setOnClickListener(this);
 
-        //Intent i = getIntent();
-        //wb = (webserver_simulator)i.getSerializableExtra("webserverObject");
+
 
     }
 
@@ -73,35 +72,11 @@ public class Sign_InActivity extends AppCompatActivity implements View.OnClickLi
                 Log.d("-----Mainactivity----- Json", json);
                 c = new SignInCommand( json );
                 new DummyTask(Sign_InActivity.this, c).execute();
-        /* ****************************************************** */
-        /* *******Send message to authenticate in webserver****** */
-                /*final ProgressDialog progressDialog;
-                progressDialog = new ProgressDialog(this, R.style.Theme_AppCompat_DayNight_Dialog_Alert);
-                progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("Authenticating...");
-                progressDialog.show();
-
-                // Delay of 5 s to simulate contact with server
-                new android.os.Handler().postDelayed(
-                        new Runnable(){
-                            @Override
-                            public void run() {
-                                process_Autentication( user, code);
-                                progressDialog.dismiss();
-                            }
-                        },5000
-                );*/
-
-        /* Check authentication and open new app */
-
-
         }
     }
 
     public void updateInterface(String reply) {
         String[] t= JsonHandler.LoginFromServer(reply);
-        Log.d("-----Mainactivity----- SessionID", t[0]);
-        Log.d("-----Mainactivity----- Message", t[1]);
 
         AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
         if(t[0].equals("0")){ //No session id
@@ -110,33 +85,25 @@ public class Sign_InActivity extends AppCompatActivity implements View.OnClickLi
             dlgAlert.create().show();
         }
         else{
-            //Intent intent = new Intent(Sign_InActivity.this, MainActivity.class);
-            //intent.putExtra("session_id", t[0]);
-            //intent.putExtra("User", user);
             dlgAlert.setTitle("Sign In Success");
             dlgAlert.setMessage(t[1]);
-            //dlgAlert.create().show();
 
             dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
+                public void onClick(DialogInterface dialog, int id) { //destroy and back
 
                     //Intent intent = new Intent(this, Menu.class);
-                    Log.d("----- Sign_InActivity ------", "AQUI");
+                    //Log.d("----- Sign_InActivity ------", "AQUI");
                     Intent intent = new Intent(Sign_InActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); //caller activity eliminated
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //this activity will become the start of a new task on this history stack.
                     startActivity(intent);
-                    finish();
                 }
             });
 
             AlertDialog dialog = dlgAlert.create();
             dialog.setCanceledOnTouchOutside(false);
-            //dlgAlert.create().show();
             dialog.show();
 
-
-
-            //startActivity(intent);
-            //finish();
         }
     }
 }

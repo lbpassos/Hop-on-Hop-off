@@ -15,9 +15,12 @@ import pt.ulisboa.tecnico.cmu.proj.command.AnotherHello;
 import pt.ulisboa.tecnico.cmu.proj.command.Command;
 import pt.ulisboa.tecnico.cmu.proj.command.HelloCommand;
 import pt.ulisboa.tecnico.cmu.proj.MainActivity;
+import pt.ulisboa.tecnico.cmu.proj.command.LogOutCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.LoginCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.SignInCommand;
+import pt.ulisboa.tecnico.cmu.proj.programActivity;
 import pt.ulisboa.tecnico.cmu.proj.response.HelloResponse;
+import pt.ulisboa.tecnico.cmu.proj.response.LogOutResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.LoginResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.Response;
 import pt.ulisboa.tecnico.cmu.proj.response.SignInResponse;
@@ -35,6 +38,11 @@ public class DummyTask extends AsyncTask<Void, Void, String> {
         this.comm = comm;
     }
     public DummyTask(Sign_InActivity mainActivity, Command comm) {
+        this.mainActivity = mainActivity;
+        this.comm = comm;
+    }
+
+    public DummyTask(programActivity mainActivity, Command comm) {
         this.mainActivity = mainActivity;
         this.comm = comm;
     }
@@ -68,6 +76,11 @@ public class DummyTask extends AsyncTask<Void, Void, String> {
 
             if( comm instanceof SignInCommand){
                 SignInResponse hr = (SignInResponse) ois.readObject();
+                reply = hr.getMessage();
+            }
+
+            if( comm instanceof LogOutCommand){
+                LogOutResponse hr = (LogOutResponse) ois.readObject();
                 reply = hr.getMessage();
             }
 
@@ -105,6 +118,11 @@ public class DummyTask extends AsyncTask<Void, Void, String> {
             else
                 if( comm instanceof SignInCommand){
                     Sign_InActivity a = (Sign_InActivity)mainActivity;
+                    a.updateInterface(o);
+                }
+                else
+                if( comm instanceof LogOutCommand){
+                    programActivity a = (programActivity)mainActivity;
                     a.updateInterface(o);
                 }
 

@@ -39,5 +39,9 @@ public class LoggedUsers {
 		}
 		return false;
 	}
+	
+	public String getSessionId(User user) {
+		return logsIn.get(user);
+	}
 
 }

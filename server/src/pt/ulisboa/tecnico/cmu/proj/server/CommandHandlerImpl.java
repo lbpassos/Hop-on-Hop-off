@@ -10,11 +10,13 @@ import pt.ulisboa.tecnico.cmu.proj.command.AnotherHello;
 import pt.ulisboa.tecnico.cmu.proj.command.CheckRankingCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.Command;
 import pt.ulisboa.tecnico.cmu.proj.command.CommandHandler;
+import pt.ulisboa.tecnico.cmu.proj.command.DownloadQuizCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.HelloCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.ListLocationsCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.LogOutCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.LoginCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.SignInCommand;
+import pt.ulisboa.tecnico.cmu.proj.response.CheckrankingResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.HelloResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.ListLocationsResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.LogOutResponse;
@@ -35,6 +37,7 @@ public class CommandHandlerImpl implements CommandHandler {
 		//User tmp = Server.u; //Test
 		return new HelloResponse("Hello from Server!");
 	}
+	
 	@Override
 	public Response handle(LoginCommand hc) {
 		String[] user_code = JsonHandler.LoginFromClient(hc.getMessage());
@@ -44,7 +47,7 @@ public class CommandHandlerImpl implements CommandHandler {
 		String id;
 		/*Algorithm:
 		 *      1- User already login?
-		 *           - Yes - REJECT
+		 *           - Yes - GIVE BACK THE SAME SESSION ID
 		 *           - No  - 2
 		 *      2- User in the system?
 		 *           - Yes - Create Session ID
@@ -54,8 +57,8 @@ public class CommandHandlerImpl implements CommandHandler {
 		 */
 				
 		if( Server.loggedInUsers.userAlreadyLogin(user_code[0], user_code[1])==true ) {
-			message = "User Already Log In";
-			id = "0";
+			id = Server.loggedInUsers.getSessionId(new User(user_code[0], user_code[1]));
+			message = "";
 		}
 		else {
 			User tmp = new User(user_code[0], user_code[1]);
@@ -235,5 +238,32 @@ public class CommandHandlerImpl implements CommandHandler {
 		correctAnswersArr = correctAnswers.toArray(correctAnswersArr);
 		rankByMonumentArr = rankByMonument.toArray(rankByMonumentArr);
 		String response = JsonHandler.CheckRankingCommandFromServer(user_code[0], user_code[0], monumentsArr, correctAnswersArr, rankByMonumentArr, global_rank);
+		return new CheckrankingResponse(response);
 	}
+	
+	public Response handle(DownloadQuizCommand hc) {
+		/*Algorithm
+		 * 1- Is session id valid?
+		 *    -NO - REJECT
+		 *    -YES - Check trip
+		 *           Get Quiz
+		 * 
+		 * */
+		String[] user_code = JsonHandler.DownloadQuizCommandFromClient( hc.getMessage() );
+		User u = Server.users.checkExistance(user_code[1]);
+		String message;
+		if(u==null) {
+			message = "Invalid user";
+		}
+		else {
+			if( Server.loggedInUsers.userSessionIDcompare(u, user_code[0]) ){ //check same session id
+				
+			}
+		}
+		
+		
+		return new CheckrankingResponse("ola");
+	}
+	
+	
 }

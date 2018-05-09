@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmu.proj;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Command c;
     private String user;
     private String code;
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button_login = findViewById(R.id.btn_login);
         button_login.setOnClickListener(this);
 
+        //Save globally
+        pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        editor = pref.edit();
 
         //Sign In
         //Setting just the "Sign In" text to be clickable
@@ -71,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        Log.d("MY DEBUG", "I'm on Click");
+        //Log.d("MY DEBUG", "I'm on Click");
 
         //final String user, code;
         AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
@@ -99,42 +105,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Log.d("-----Mainactivity----- User", user);
         //Log.d("-----Mainactivity----- Code", code);
         String json = JsonHandler.LoginToServer(user, code);
-        Log.d("-----Mainactivity----- Json", json);
+        //Log.d("-----Mainactivity----- Json", json);
         c = new LoginCommand( json );
         new DummyTask(MainActivity.this, c).execute();
-
-        /*final ProgressDialog progressDialog;
-        progressDialog = new ProgressDialog(this, R.style.Theme_AppCompat_DayNight_Dialog_Alert);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
-
-        // Delay of 5 s to simulate contact with server
-        new android.os.Handler().postDelayed(
-                new Runnable(){
-                    @Override
-                    public void run() {
-                        //process_Autentication( user, code);
-                        progressDialog.dismiss();
-                    }
-                },5000
-        );*/
-
-
-        /* Check authentication and open new app */
-        // ******************* If authentication ok
-
-
-
-
-
-
     }
 
     public void updateInterface(String reply) {
         String[] t= JsonHandler.LoginFromServer(reply);
-        Log.d("-----Mainactivity----- SessionID", t[0]);
-        Log.d("-----Mainactivity----- Message", t[1]);
+        //Log.d("-----Mainactivity----- SessionID", t[0]);
+        //Log.d("-----Mainactivity----- Message", t[1]);
 
         AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
         if(t[0].equals("0")){ //No session id
@@ -143,38 +122,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             dlgAlert.create().show();
         }
         else{
+            editor.putString("sessionId", t[0]);
+            editor.putString("User", user);
+            editor.commit(); // commit changes
+
             Intent intent = new Intent(MainActivity.this, programActivity.class);
-            intent.putExtra("session_id", t[0]);
-            intent.putExtra("User", user);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); //caller activity eliminated
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //this activity will become the start of a new task on this history stack.
             startActivity(intent);
-            finish();
         }
     }
 
-    /*public void process_Autentication(String user, String code){
-        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
 
-        res = wb.authenticate(user, code); //simulate server
-        if( res==0 ){
-            dlgAlert.setTitle("User Inexistent");
-            dlgAlert.setMessage("Please Sign In");
-        }
-        else{
-            if(res==-1) {
-                dlgAlert.setTitle("Invalid Code");
-                dlgAlert.setMessage("Please Check the Code");
-            }
-        }
-        if(res!=1){
-            dlgAlert.create().show();
-            return;
-        }
-        else{
-            Intent intent = new Intent(MainActivity.this, programActivity.class);
-            intent.putExtra("webserverObject", (Serializable) wb);
-            intent.putExtra("User", user);
-            startActivity(intent);
-            finish();
-        }
-    }*/
 }
