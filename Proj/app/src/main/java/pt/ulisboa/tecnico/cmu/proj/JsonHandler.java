@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmu.proj;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -90,6 +91,69 @@ public class JsonHandler {
         return tmp;
     }
 
+
+
+    //Create JSON string for ListLocations command
+    /* Format
+     * 	{
+  		"list command":
+        	{"session id": "x",
+        	"username": "XX",
+        	"list":
+        			[
+        				{"val": "1"},
+        				{"val": "2"}
+        			]
+        	}
+		}
+     */
+    public static String ListLocationsToServer(String user, String sid){
+        String tmp;
+        String[] to_Return;
+
+        JSONObject obj_t = new JSONObject();
+        JSONArray arrJSON = new JSONArray();
+
+        JSONObject obj_return = new JSONObject();
+
+        try {
+            obj_t.put("session id", sid);
+            obj_t.put("username", user);
+            obj_t.put("list", arrJSON);
+            obj_return.put("list command",obj_t);
+            Log.d("-----JSONHandler----- Code", obj_return.toString());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return obj_return.toString();
+    }
+    //Decode JSON string for ListLocations command
+    public static String[] ListLocationsFromServer(String response){
+        String tmp = "";
+
+        JSONArray arrJSON = new JSONArray();
+
+        try {
+            String[] to_Return;
+            JSONObject reader = new JSONObject(response);
+            JSONObject listCommand = reader.getJSONObject("list command");
+            tmp = listCommand.getString("list");
+            arrJSON = new JSONArray(tmp);
+            to_Return = new String[arrJSON.length()];
+            for(int i =0; i<arrJSON.length(); ++i){
+                JSONObject item = arrJSON.getJSONObject(i);
+                to_Return[i] = item.getString("val");
+            }
+            return to_Return;
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
 }

@@ -9,5 +9,6 @@ public interface CommandHandler {
 	public Response handle(LoginCommand hc);
 	public Response handle(SignInCommand hc);
 	public Response handle(LogOutCommand hc);
+	public Response handle(ListLocationsCommand hc);
 
 }
