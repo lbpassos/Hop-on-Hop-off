@@ -77,17 +77,22 @@ public class programActivity extends AppCompatActivity {
 
         // Adding Load More button to lisview at bottom
         lv.addFooterView(btnSubmit);
+
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent;
                 // Starting a new async task
                 switch(selectedItem){
                     case 0: // List Tour Locations
-
                         Log.d("ListView", "------ List Tour Locations");
+                        intent = new Intent(programActivity.this, ListMonumentsActivity.class);
+                        startActivity(intent);
                         break;
                     case 1: //Download Quiz
-                        Log.d("ListView", "----- Download Quiz");
+                        //Log.d("ListView", "----- Download Quiz");
+                        intent = new Intent(programActivity.this, QuizActivity.class);
+                        startActivity(intent);
                         break;
                     case 2: //Answer Quiz
                         Log.d("ListView", "----- Answer Quiz");
