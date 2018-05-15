@@ -26,6 +26,10 @@ public class Question {
 	public String getChoice(int idx) {
 		return answers.get(idx).getChoice();
 	}
+
+	public Choice getChoiceObj(int idx) {
+		return answers.get(idx);
+	}
 	
 	public int getNumCorrectAnswers(boolean[] ans) {
 		int val = 0;

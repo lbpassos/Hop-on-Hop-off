@@ -97,6 +97,8 @@ public class programActivity extends AppCompatActivity {
                     case 2: //Answer Quiz
                         //load do quiz
                         //Log.d("ListView", "----- Answer Quiz");
+                        intent = new Intent(programActivity.this, AnswerQuizActivity.class);
+                        startActivity(intent);
                         break;
                     case 3: //Check Ranking
                         Log.d("ListView", "----- Check Ranking");

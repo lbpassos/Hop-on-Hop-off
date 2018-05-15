@@ -1,10 +1,8 @@
 package pt.ulisboa.tecnico.cmu.proj;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +15,6 @@ import java.util.ArrayList;
 
 import pt.ulisboa.tecnico.cmu.proj.command.Command;
 import pt.ulisboa.tecnico.cmu.proj.command.DownloadQuizCommand;
-import pt.ulisboa.tecnico.cmu.proj.command.ListLocationsCommand;
 import pt.ulisboa.tecnico.cmu.proj.dummyclient.asynctask.DummyTask;
 import pt.ulisboa.tecnico.cmu.proj.questions.Question;
 import pt.ulisboa.tecnico.cmu.proj.questions.QuestionsByMonument;
@@ -25,13 +22,14 @@ import pt.ulisboa.tecnico.cmu.proj.quiz.ChildItemsInfo;
 import pt.ulisboa.tecnico.cmu.proj.quiz.GroupItemsInfo;
 
 
-public class QuizActivity extends AppCompatActivity {
+public class AnswerQuizActivity extends AppCompatActivity {
 
     private ArrayList<GroupItemsInfo> groups = new ArrayList<GroupItemsInfo>();
 
     private MyExpandableListAdapter myExpandableListAdapter;
     private ExpandableListView simpleExpandableListView;
     private Button b;
+    private Button buttonSend;
     private Command c;
     private QuestionsByMonument qm;
 
@@ -39,12 +37,46 @@ public class QuizActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_quiz);
+        setContentView(R.layout.activity_answerquiz);
 
         loadData();
 
         b = (Button) findViewById(R.id.button2);
+        buttonSend = (Button) findViewById(R.id.buttonSend);
 
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { //Save if necessary
+                SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+                SharedPreferences.Editor editor = pref.edit();
+
+                for(int i=0; i<groups.size(); ++i){
+                    ArrayList<ChildItemsInfo> childs = groups.get(i).getChilds();
+                    for(int j=0; j<childs.size(); ++j){
+                        boolean status = childs.get(j).getFlag();
+                        qm.getQuestion(i).getChoiceObj(j).setStatus( status );
+                    }
+                }
+
+                //Save object
+                Gson gson = new Gson(); //added in gradle
+                String json = gson.toJson(qm);
+                editor.putString("questions", json);
+                editor.commit();
+
+                finish();
+
+            }
+        });
+
+        buttonSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { //Send if necessary
+                //Send file
+                
+
+            }
+        });
 
 
 
@@ -55,26 +87,11 @@ public class QuizActivity extends AppCompatActivity {
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
 
-        String user = pref.getString("User", null);
-        String sid = pref.getString("sessionId", null);
 
-        // DO NOT FORGET THE ID of the MONUMENT must be subtracted by one
-        String json = JsonHandler.DownloadQuizToServer(user, sid,"0");
-        Log.d("-----Lit Monuments----- Message", json);
-        c = new DownloadQuizCommand( json );
-        new DummyTask(QuizActivity.this, c).execute();
-
-
-
-    }
-    public void updateInterface(String reply) {
-
-        //SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
-        //SharedPreferences.Editor editor = pref.edit();;
-        //editor.putString("monument ID", t[0]);
-        //editor.commit(); // commit changes
-
-        qm = JsonHandler.DownloadQuizFromServer(reply);
+        //Load object
+        Gson gson = new Gson();
+        String json = pref.getString("questions", "");
+        qm = gson.fromJson(json, QuestionsByMonument.class);
 
         for(int i=0; i<qm.getSize(); ++i){
             Question q = qm.getQuestion(i);
@@ -82,6 +99,7 @@ public class QuizActivity extends AppCompatActivity {
 
             for(int j=0; j<q.getNumOfChoices(); ++j){
                 ChildItemsInfo c1 = new ChildItemsInfo(q.getChoice(j), Character.toString ((char)('A'+j)) );
+                c1.setFlag( q.getChoiceObj(j).getStatus() );
                 gi1.addChild(c1);
             }
             groups.add(i, gi1);
@@ -90,7 +108,7 @@ public class QuizActivity extends AppCompatActivity {
         //get reference of the ExpandableListView
         simpleExpandableListView = (ExpandableListView) findViewById(R.id.lvExp);
         // create the adapter by passing the ArrayList data
-        myExpandableListAdapter = new MyExpandableListAdapter(QuizActivity.this, groups);
+        myExpandableListAdapter = new MyExpandableListAdapter(AnswerQuizActivity.this, groups);
         // attach the adapter to the expandable list view
         simpleExpandableListView.setAdapter(myExpandableListAdapter);
 
@@ -115,33 +133,8 @@ public class QuizActivity extends AppCompatActivity {
             }
         });
 
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
-                SharedPreferences.Editor editor = pref.edit();
-
-
-                for(int i=0; i<groups.size(); ++i){
-                    ArrayList<ChildItemsInfo> childs = groups.get(i).getChilds();
-                    for(int j=0; j<childs.size(); ++j){
-                        boolean status = childs.get(j).getFlag();
-                        qm.getQuestion(i).getChoiceObj(j).setStatus( status );
-                    }
-                }
-
-               //Save object
-                Gson gson = new Gson(); //added in gradle
-                String json = gson.toJson(qm);
-                editor.putString("questions", json);
-                editor.commit();
-
-                finish(); //just ficinish
-            }
-        });
-
-
 
     }
+
 
 }
