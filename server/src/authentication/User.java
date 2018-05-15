@@ -61,9 +61,5 @@ public class User {
 	public int hashCode() {
 		return name.hashCode()+code.hashCode();
 	}
-
-	public boolean hasInternet() {
-		return (code.hashCode() % 2 == 0);
-	}
 	
 }

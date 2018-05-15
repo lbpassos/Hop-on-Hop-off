@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cmu.proj.server;
 import java.util.ArrayList;
 
 import algorithm_data.Questions.Monument;
+import algorithm_data.Questions.QuestionsByMonument;
 import algorithm_data.Questions.Ranking;
 import authentication.SessionId;
 import authentication.User;
@@ -17,6 +18,7 @@ import pt.ulisboa.tecnico.cmu.proj.command.LogOutCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.LoginCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.SignInCommand;
 import pt.ulisboa.tecnico.cmu.proj.response.CheckrankingResponse;
+import pt.ulisboa.tecnico.cmu.proj.response.DownloadQuizResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.HelloResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.ListLocationsResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.LogOutResponse;
@@ -241,12 +243,14 @@ public class CommandHandlerImpl implements CommandHandler {
 		return new CheckrankingResponse(response);
 	}
 	
+	
+	
+	
 	public Response handle(DownloadQuizCommand hc) {
 		/*Algorithm
 		 * 1- Is session id valid?
-		 *    -NO - REJECT
-		 *    -YES - Check trip
-		 *           Get Quiz
+		 *    -NO  - REJECT
+		 *    -YES - Get Quiz
 		 * 
 		 * */
 		String[] user_code = JsonHandler.DownloadQuizCommandFromClient( hc.getMessage() );
@@ -257,12 +261,15 @@ public class CommandHandlerImpl implements CommandHandler {
 		}
 		else {
 			if( Server.loggedInUsers.userSessionIDcompare(u, user_code[0]) ){ //check same session id
-				
+				QuestionsByMonument qbm = Server.quizzes[ Integer.parseInt(user_code[2]) ];
+				message = JsonHandler.DownloadQuizCommandFromServer(user_code[0], user_code[1], qbm);
+			}
+			else {
+				message = "Invalid Session Id";
 			}
 		}
-		
-		
-		return new CheckrankingResponse("ola");
+				
+		return new DownloadQuizResponse(message);
 	}
 	
 	

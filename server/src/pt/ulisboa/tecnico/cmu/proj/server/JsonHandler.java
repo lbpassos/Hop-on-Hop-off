@@ -2,7 +2,12 @@ package pt.ulisboa.tecnico.cmu.proj.server;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
 import org.json.simple.parser.JSONParser;
+
+
+import algorithm_data.Questions.Question;
+import algorithm_data.Questions.QuestionsByMonument;
 
 public class JsonHandler {
 	
@@ -220,12 +225,32 @@ public class JsonHandler {
     
     /*
     	{
-    	"download quiz": 
-    	  { "session id": "x",
-    	      "username": "XX",
-    	   "monument id": "xx"
-    	  }
-    	}
+	"download quiz": 
+	  { "session id": "x",
+	      "username": "XX",
+	   "monument id": "xx",
+       "questions": 
+          [
+            {
+              "q": "In which year was the Zoo founded?",
+              "options": [
+                {
+                  "choice": "1871"
+                },
+                {
+                  "choice": "1884"
+                },
+                {
+                  "choice": "1894"
+                },
+                {
+                  "choice": "1900"
+                }
+              ]
+            }
+	        ]
+	  }
+	}
     */
     public static String[] DownloadQuizCommandFromClient(String command){
     	String[] tmp = new String[3];
@@ -247,5 +272,52 @@ public class JsonHandler {
         
         return tmp;
     	
+    }
+    public static String DownloadQuizCommandFromServer(String session_id, String username, QuestionsByMonument qbm){
+    	
+    	//get full size of objects
+    	int total_choices = 0;
+    	for(int i=0; i<qbm.getSize(); ++i) {
+    		int sizeOfAnswers = qbm.getQuestion(i).getNumOfChoices(); 
+    		total_choices += sizeOfAnswers;
+    	}
+    	
+    	JSONObject[] obj_choices = new JSONObject[total_choices];
+    	//JSONObject[] obj_questions = new JSONObject[qbm.getSize()];
+    	JSONArray obj_questions = new JSONArray();;
+    		
+    	JSONArray[] options = new JSONArray[qbm.getSize()]; //JSONArray();
+    	
+    	int idx = 0;
+    	for(int i=0; i<qbm.getSize(); ++i) {//number of questions
+    		options[i] = new JSONArray();
+    		Question q = qbm.getQuestion(i);//take question
+    		for(int j=0; j<qbm.getQuestion(i).getNumOfChoices(); ++j) {
+    			obj_choices[idx] = new JSONObject(); 
+    			obj_choices[idx].put("choice", q.getChoice(j));
+    			options[i].add( obj_choices[idx] );
+    			++idx;
+    		}
+    		//obj_questions[i] = new JSONObject();
+    		JSONObject tmp = new JSONObject();
+    		tmp.put("q", q.getQuestion());
+    		tmp.put("options", options[i]);
+    		obj_questions.add(tmp);
+    		//obj_questions[i].put("q", q.getQuestion());
+    		//obj_questions[i].put("options", options[i]);
+
+    	}
+    	JSONObject obj_final = new JSONObject(); 
+    	obj_final.put("questions", obj_questions);
+    	obj_final.put("monument id", qbm.getMonument().getMonumentDescription());
+    	obj_final.put("session id", session_id);
+    	obj_final.put("username", username);
+    	
+    	
+    	JSONObject obj_toReturn = new JSONObject(); 
+    	obj_toReturn.put("download quiz", obj_final);
+    	
+    	return obj_toReturn.toJSONString();
+    	//return obj_questions.toString();
     }
 }
