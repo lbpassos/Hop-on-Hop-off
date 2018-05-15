@@ -7,4 +7,5 @@ public interface ResponseHandler {
 	public void handle(SignInResponse hr);
 	public void handle(LogOutResponse hr);
 	public void handle(ListLocationsResponse hr);
+	public void handle(DownloadQuizResponse hr);
 }

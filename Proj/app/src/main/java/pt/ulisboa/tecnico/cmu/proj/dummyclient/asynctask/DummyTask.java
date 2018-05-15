@@ -10,10 +10,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+
 import pt.ulisboa.tecnico.cmu.proj.ListMonumentsActivity;
+import pt.ulisboa.tecnico.cmu.proj.QuizActivity;
 import pt.ulisboa.tecnico.cmu.proj.Sign_InActivity;
 import pt.ulisboa.tecnico.cmu.proj.command.AnotherHello;
 import pt.ulisboa.tecnico.cmu.proj.command.Command;
+import pt.ulisboa.tecnico.cmu.proj.command.DownloadQuizCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.HelloCommand;
 import pt.ulisboa.tecnico.cmu.proj.MainActivity;
 import pt.ulisboa.tecnico.cmu.proj.command.ListLocationsCommand;
@@ -21,6 +24,7 @@ import pt.ulisboa.tecnico.cmu.proj.command.LogOutCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.LoginCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.SignInCommand;
 import pt.ulisboa.tecnico.cmu.proj.programActivity;
+import pt.ulisboa.tecnico.cmu.proj.response.DownloadQuizResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.HelloResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.ListLocationsResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.LogOutResponse;
@@ -51,6 +55,11 @@ public class DummyTask extends AsyncTask<Void, Void, String> {
     }
 
     public DummyTask(ListMonumentsActivity mainActivity, Command comm) {
+        this.mainActivity = mainActivity;
+        this.comm = comm;
+    }
+
+    public DummyTask(QuizActivity mainActivity, Command comm) {
         this.mainActivity = mainActivity;
         this.comm = comm;
     }
@@ -93,6 +102,10 @@ public class DummyTask extends AsyncTask<Void, Void, String> {
             }
             if( comm instanceof ListLocationsCommand){
                 ListLocationsResponse hr = (ListLocationsResponse) ois.readObject();
+                reply = hr.getMessage();
+            }
+            if( comm instanceof DownloadQuizCommand){
+                DownloadQuizResponse hr = (DownloadQuizResponse) ois.readObject();
                 reply = hr.getMessage();
             }
 
@@ -140,6 +153,11 @@ public class DummyTask extends AsyncTask<Void, Void, String> {
                 else
                 if( comm instanceof ListLocationsCommand){
                     ListMonumentsActivity a = (ListMonumentsActivity)mainActivity;
+                    a.updateInterface(o);
+                }
+                else
+                if( comm instanceof DownloadQuizCommand){
+                    QuizActivity a = (QuizActivity)mainActivity;
                     a.updateInterface(o);
                 }
 

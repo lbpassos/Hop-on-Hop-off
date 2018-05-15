@@ -1,9 +1,14 @@
 package pt.ulisboa.tecnico.cmu.proj;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import pt.ulisboa.tecnico.cmu.proj.questions.Choice;
+import pt.ulisboa.tecnico.cmu.proj.questions.Question;
+import pt.ulisboa.tecnico.cmu.proj.questions.QuestionsByMonument;
 
 /**
  * Created by ist426300 on 10-04-2018.
@@ -154,7 +159,85 @@ public class JsonHandler {
         }
         return null;
     }
+    /*
+    	{
+	"download quiz":
+	  { "session id": "x",
+	      "username": "XX",
+	   "monument id": "xx",
+       "questions":
+          [
+            {
+              "q": "In which year was the Zoo founded?",
+              "options": [
+                {
+                  "choice": "1871"
+                },
+                {
+                  "choice": "1884"
+                },
+                {
+                  "choice": "1894"
+                },
+                {
+                  "choice": "1900"
+                }
+              ]
+            }
+	        ]
+	  }
+	}
+    */
+    public static String DownloadQuizToServer(String user, String sid, String monumentId){
+        JSONArray arrJSON = new JSONArray(); //empty array
+        JSONObject obj_t = new JSONObject();
+        JSONObject obj_f = new JSONObject();
+        try {
+            obj_t.put("questions", arrJSON);
+            obj_t.put("monument id", monumentId);
+            obj_t.put("username", user);
+            obj_t.put("session id", sid);
+            obj_f.put("download quiz", obj_t);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return obj_f.toString();
+    }
+    public static QuestionsByMonument DownloadQuizFromServer(String response){
+        QuestionsByMonument qm = null;
 
+        try {
+            JSONObject reader = new JSONObject(response);
+            JSONObject downloadQuizCommand = reader.getJSONObject("download quiz");
+
+            qm = new QuestionsByMonument( downloadQuizCommand.getString("monument id") ); //get monument id
+
+            JSONArray arrJSON  = downloadQuizCommand.getJSONArray("questions");
+
+            //JSONObject questions = reader.getJSONObject("questions");
+            //JSONArray arrJSON = new JSONArray(questions);
+            //String[] to_Return = new String[arrJSON.length()];
+            for(int i =0; i<arrJSON.length(); ++i){
+                JSONObject item = arrJSON.getJSONObject(i);
+                Question q_tmp = new Question(item.getString("q"));
+
+                JSONArray arrJSON_options = item.getJSONArray("options");
+                //JSONObject options = item.getJSONObject("options");
+                //JSONArray arrJSON_options = new JSONArray(options);
+                for(int j=0; j<arrJSON_options.length(); ++j) {
+                    JSONObject item_choice = arrJSON_options.getJSONObject(j);
+                    Choice ch_tmp = new Choice(item_choice.getString("choice"));
+                    q_tmp.insertAnswer(ch_tmp);
+                }
+                qm.addQuestion(q_tmp);
+            }
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+       return qm;
+    }
 
 }
 

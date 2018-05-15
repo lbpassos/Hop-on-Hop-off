@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmu.proj.command;
 
+import pt.ulisboa.tecnico.cmu.proj.response.DownloadQuizResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.Response;
 
 public interface CommandHandler {
@@ -10,5 +11,6 @@ public interface CommandHandler {
 	public Response handle(SignInCommand hc);
 	public Response handle(LogOutCommand hc);
 	public Response handle(ListLocationsCommand hc);
+	public Response handle(DownloadQuizCommand hc);
 
 }
