@@ -58,12 +58,17 @@ public class GenerateKeys {
 			k.createKeys();
 			k.writeToFile(keyFolder + "publicKey", k.getPublicKey().getEncoded());
 			k.writeToFile(keyFolder + "privateKey", k.getPrivateKey().getEncoded());
+
+			// Write test file to encrypt and decrypt
+			String s = "Hello world!!!\nThis is a test text.\n";
+			k.writeToFile(keyFolder + "test.txt", s.getBytes());
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
-		/*	on crypto/	javac GenerateKeys.java
-			on src/		java crypto/GenerateKeys or
+		/*	on src/		javac crypto/GenerateKeys.java
+						java crypto/GenerateKeys or
 						java crypto.GenerateKeys
+			javac crypto/GenerateKeys.java ; java crypto/GenerateKeys; cat KeyPair/test.txt
 		*/
 	}
 }

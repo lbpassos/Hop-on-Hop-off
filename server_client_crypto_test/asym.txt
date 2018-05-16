@@ -1,0 +1,20 @@
+Alice sending a signed and encrypted message to Bob:
+
+	Alice side:
+		1. Calculate message digest
+		2. Sign msg digest
+		3. Seng clear message + signed digest + AlicePublicKey
+	msg –> hash(msg) = digest
+
+		Cifrar 3 com ServerPubK
+
+	Server
+		Decifrar res  com privada
+		Decifrar digest com AlicePublicKey
+		Fazer hash msg
+		Comparar as duas
+		(válido)
+
+
+Encrypt:
+(msg,)
