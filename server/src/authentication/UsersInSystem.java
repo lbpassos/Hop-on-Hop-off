@@ -10,6 +10,9 @@ public class UsersInSystem {
 	}
 
 	public void insert(User u) {
+		if(users.contains(u)) {
+			users.remove(u);
+		}
 		users.add(u);
 	}
 	

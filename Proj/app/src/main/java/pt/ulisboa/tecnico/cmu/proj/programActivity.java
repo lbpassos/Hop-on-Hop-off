@@ -101,7 +101,9 @@ public class programActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case 3: //Check Ranking
-                        Log.d("ListView", "----- Check Ranking");
+                        //Log.d("ListView", "----- Check Ranking");
+                        intent = new Intent(programActivity.this, RankingActivity.class);
+                        startActivity(intent);
                         break;
                     case 4: //Share Progress
                         Log.d("ListView", "----- Share Progress");

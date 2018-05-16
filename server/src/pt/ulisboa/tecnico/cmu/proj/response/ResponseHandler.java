@@ -9,5 +9,7 @@ public interface ResponseHandler {
 	public void handle(LogOutResponse hc);
 	public void handle(CheckrankingResponse hc);
 	public void handle(DownloadQuizResponse hc);
-	
+	public void handle(UploadQuizResponse hc);
+	public void handle(GetRankingResponse hc);
+
 }

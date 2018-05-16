@@ -11,26 +11,32 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 
+import pt.ulisboa.tecnico.cmu.proj.AnswerQuizActivity;
 import pt.ulisboa.tecnico.cmu.proj.ListMonumentsActivity;
 import pt.ulisboa.tecnico.cmu.proj.QuizActivity;
+import pt.ulisboa.tecnico.cmu.proj.RankingActivity;
 import pt.ulisboa.tecnico.cmu.proj.Sign_InActivity;
 import pt.ulisboa.tecnico.cmu.proj.command.AnotherHello;
 import pt.ulisboa.tecnico.cmu.proj.command.Command;
 import pt.ulisboa.tecnico.cmu.proj.command.DownloadQuizCommand;
+import pt.ulisboa.tecnico.cmu.proj.command.GetRankingCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.HelloCommand;
 import pt.ulisboa.tecnico.cmu.proj.MainActivity;
 import pt.ulisboa.tecnico.cmu.proj.command.ListLocationsCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.LogOutCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.LoginCommand;
 import pt.ulisboa.tecnico.cmu.proj.command.SignInCommand;
+import pt.ulisboa.tecnico.cmu.proj.command.UploadQuizCommand;
 import pt.ulisboa.tecnico.cmu.proj.programActivity;
 import pt.ulisboa.tecnico.cmu.proj.response.DownloadQuizResponse;
+import pt.ulisboa.tecnico.cmu.proj.response.GetRankingResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.HelloResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.ListLocationsResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.LogOutResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.LoginResponse;
 import pt.ulisboa.tecnico.cmu.proj.response.Response;
 import pt.ulisboa.tecnico.cmu.proj.response.SignInResponse;
+import pt.ulisboa.tecnico.cmu.proj.response.UploadQuizResponse;
 
 
 public class DummyTask extends AsyncTask<Void, Void, String> {
@@ -63,6 +69,17 @@ public class DummyTask extends AsyncTask<Void, Void, String> {
         this.mainActivity = mainActivity;
         this.comm = comm;
     }
+    public DummyTask(AnswerQuizActivity mainActivity, Command comm) {
+        this.mainActivity = mainActivity;
+        this.comm = comm;
+    }
+    public DummyTask(RankingActivity mainActivity, Command comm) {
+        this.mainActivity = mainActivity;
+        this.comm = comm;
+    }
+
+
+
 
     @Override
     protected String doInBackground(Void[] params) {
@@ -106,6 +123,14 @@ public class DummyTask extends AsyncTask<Void, Void, String> {
             }
             if( comm instanceof DownloadQuizCommand){
                 DownloadQuizResponse hr = (DownloadQuizResponse) ois.readObject();
+                reply = hr.getMessage();
+            }
+            if( comm instanceof UploadQuizCommand){
+                UploadQuizResponse hr = (UploadQuizResponse) ois.readObject();
+                reply = hr.getMessage();
+            }
+            if( comm instanceof GetRankingCommand){
+                GetRankingResponse hr = (GetRankingResponse) ois.readObject();
                 reply = hr.getMessage();
             }
 
@@ -158,6 +183,16 @@ public class DummyTask extends AsyncTask<Void, Void, String> {
                 else
                 if( comm instanceof DownloadQuizCommand){
                     QuizActivity a = (QuizActivity)mainActivity;
+                    a.updateInterface(o);
+                }
+                else
+                if( comm instanceof UploadQuizCommand){
+                    AnswerQuizActivity a = (AnswerQuizActivity)mainActivity;
+                    a.updateInterface(o);
+                }
+                else
+                if( comm instanceof GetRankingCommand){
+                    RankingActivity a = (RankingActivity)mainActivity;
                     a.updateInterface(o);
                 }
 

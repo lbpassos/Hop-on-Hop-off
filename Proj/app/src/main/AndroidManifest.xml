@@ -20,6 +20,7 @@
         <activity android:name="pt.ulisboa.tecnico.cmu.proj.programActivity"/>
         <activity android:name="pt.ulisboa.tecnico.cmu.proj.ListMonumentsActivity"/>
         <activity android:name="pt.ulisboa.tecnico.cmu.proj.AnswerQuizActivity"/>
+        <activity android:name="pt.ulisboa.tecnico.cmu.proj.RankingActivity"/>
         <activity android:name="pt.ulisboa.tecnico.cmu.proj.QuizActivity"></activity>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />

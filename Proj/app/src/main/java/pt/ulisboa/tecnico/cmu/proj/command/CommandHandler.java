@@ -12,5 +12,7 @@ public interface CommandHandler {
 	public Response handle(LogOutCommand hc);
 	public Response handle(ListLocationsCommand hc);
 	public Response handle(DownloadQuizCommand hc);
+	public Response handle(UploadQuizCommand hc);
+	public Response handle(GetRankingCommand hc);
 
 }

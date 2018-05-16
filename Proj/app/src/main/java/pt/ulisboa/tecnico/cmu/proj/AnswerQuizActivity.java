@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmu.proj;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,11 +16,13 @@ import java.util.ArrayList;
 
 import pt.ulisboa.tecnico.cmu.proj.command.Command;
 import pt.ulisboa.tecnico.cmu.proj.command.DownloadQuizCommand;
+import pt.ulisboa.tecnico.cmu.proj.command.UploadQuizCommand;
 import pt.ulisboa.tecnico.cmu.proj.dummyclient.asynctask.DummyTask;
 import pt.ulisboa.tecnico.cmu.proj.questions.Question;
 import pt.ulisboa.tecnico.cmu.proj.questions.QuestionsByMonument;
 import pt.ulisboa.tecnico.cmu.proj.quiz.ChildItemsInfo;
 import pt.ulisboa.tecnico.cmu.proj.quiz.GroupItemsInfo;
+import pt.ulisboa.tecnico.cmu.proj.quiz.RankingCurrentQuiz;
 
 
 public class AnswerQuizActivity extends AppCompatActivity {
@@ -72,8 +75,18 @@ public class AnswerQuizActivity extends AppCompatActivity {
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { //Send if necessary
-                //Send file
-                
+                //Send file only if current monumentID != monumentID saved
+                SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+
+                String user = pref.getString("User", null);
+                String sid = pref.getString("sessionId", null);
+
+                // DO NOT FORGET THE ID of the MONUMENT must be subtracted by one
+                String json = JsonHandler.UploadAnswerQuizToServer(user, sid, "2", qm);
+                //Log.d("-----Lit Monuments----- Message", json);
+                c = new UploadQuizCommand( json );
+                new DummyTask(AnswerQuizActivity.this, c).execute();
+
 
             }
         });
@@ -92,7 +105,10 @@ public class AnswerQuizActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String json = pref.getString("questions", "");
         qm = gson.fromJson(json, QuestionsByMonument.class);
-
+        if(qm==null){
+            finish();
+            return;
+        }
         for(int i=0; i<qm.getSize(); ++i){
             Question q = qm.getQuestion(i);
             GroupItemsInfo gi1 = new GroupItemsInfo(q.getQuestion());
@@ -132,9 +148,28 @@ public class AnswerQuizActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
     }
 
+    public void updateInterface(String reply) {
 
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+
+        String[] tmp = JsonHandler.UploadAnswerQuizFromServer(reply);
+        RankingCurrentQuiz rq = new RankingCurrentQuiz(tmp[0], tmp[1], tmp[2]);
+
+        Gson gson = new Gson(); //added in gradle
+        String json = gson.toJson(rq);
+        editor.putString("lastRankingMonument", json);
+        editor.commit();
+
+        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+        dlgAlert.setTitle(rq.getmonumenDesc());
+
+        String alert1 = "Questions Answered: " + rq.getNumQuestions();
+        String alert2 = "Correct Questions: " + rq.getNumAnswers();
+
+        dlgAlert.setMessage(alert1 + "\n" + alert2);
+        dlgAlert.create().show();
+    }
 }

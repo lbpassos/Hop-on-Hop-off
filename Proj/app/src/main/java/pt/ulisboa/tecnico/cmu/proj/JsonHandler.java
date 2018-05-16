@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import pt.ulisboa.tecnico.cmu.proj.questions.Choice;
 import pt.ulisboa.tecnico.cmu.proj.questions.Question;
 import pt.ulisboa.tecnico.cmu.proj.questions.QuestionsByMonument;
+import pt.ulisboa.tecnico.cmu.proj.ranking.RankingToShow;
 
 /**
  * Created by ist426300 on 10-04-2018.
@@ -238,7 +239,186 @@ public class JsonHandler {
         }
        return qm;
     }
+    /*
+    {
+	"upload quiz":
+	  { "session id": "x",
+	      "username": "XX",
+	   "monument id download": "xx",
+	   "monument id upload": "xx",
+       "questions":
+          [
+            {
+              "options": [
+                {
+                  "answer": true
+                },
+                {
+                  "answer": false
+                },
+                {
+                  "answer": false
+                },
+                {
+                  "answer": false
+                }
+              ]
+            }
+	        ]
+	  }
+	}
+    */
+    public static String UploadAnswerQuizToServer(String user, String sid, String monumentId_u, QuestionsByMonument qbm){
 
+        //get full size of objects
+        int total_choices = 0;
+        for(int i=0; i<qbm.getSize(); ++i) {
+            int sizeOfAnswers = qbm.getQuestion(i).getNumOfChoices();
+            total_choices += sizeOfAnswers;
+        }
+
+        JSONObject[] obj_choices = new JSONObject[total_choices];
+        //JSONObject[] obj_questions = new JSONObject[qbm.getSize()];
+        JSONArray obj_questions = new JSONArray();
+
+        JSONArray[] options = new JSONArray[qbm.getSize()]; //JSONArray();
+
+        int idx = 0;
+        for(int i=0; i<qbm.getSize(); ++i) {//number of questions
+            options[i] = new JSONArray();
+            Question q = qbm.getQuestion(i);//take question
+            for(int j=0; j<qbm.getQuestion(i).getNumOfChoices(); ++j) {
+                obj_choices[idx] = new JSONObject();
+                try {
+                    obj_choices[idx].put("answer", q.getChoiceObj(j).getStatus());
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+                options[i].put( obj_choices[idx] );
+                ++idx;
+            }
+            //obj_questions[i] = new JSONObject();
+            JSONObject tmp = new JSONObject();
+            try {
+                tmp.put("options", options[i]);
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+                obj_questions.put(tmp);
+            //obj_questions[i].put("q", q.getQuestion());
+            //obj_questions[i].put("options", options[i]);
+
+        }
+        JSONObject obj_final = new JSONObject();
+        try {
+            obj_final.put("questions", obj_questions);
+            obj_final.put("monument id upload", monumentId_u);
+            obj_final.put("monument id download", qbm.getMonument());
+            obj_final.put("session id", sid);
+            obj_final.put("username", user);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        JSONObject obj_toReturn = new JSONObject();
+        try {
+            obj_toReturn.put("upload quiz", obj_final);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return obj_toReturn.toString();
+    }
+        /*{
+            "upload quiz":
+                {
+                    "session id": "x",
+                    "username": "XX",
+                    "Monument description": "xx",
+                    "Number of Questions Answered": "xx",
+                    "Number of Correct Questions": "xx"
+                }
+            }
+        */
+        public static String[] UploadAnswerQuizFromServer(String response){
+            String[] tmp = new String[3];
+            try {
+                JSONObject reader = new JSONObject(response);
+                JSONObject UploadAnswerQuiz = reader.getJSONObject("upload quiz");
+                tmp[0] = UploadAnswerQuiz.getString("Number of Questions Answered");
+                tmp[1] = UploadAnswerQuiz.getString("Number of Correct Questions");
+                tmp[2] = UploadAnswerQuiz.getString("Monument description");
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+            return tmp;
+        }
+
+
+    /*
+    {
+		"ranking":
+	  		{ "session id": "x",
+	      "username": "XX",
+	        "global": "xx",
+	        "result": [
+	          {
+	                        "monument desc": "xx",
+	                        "numQuestions": "xx",
+	                        "numCorrectQuestions": "xx",
+        	                "total": "xx"
+	          }
+	          ]
+	  }
+}
+    */
+    public static String GetRankingToServer(String user, String sid){
+        JSONArray options = new JSONArray();
+        JSONObject obj = new JSONObject();
+        JSONObject obj_f = new JSONObject();
+        try {
+            obj.put("result", options);
+            obj.put("global", "");
+            obj.put("session id", sid);
+            obj.put("username", user);
+            obj_f.put("ranking", obj);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return obj_f.toString();
+    }
+    public static RankingToShow GetRankingFromServer(String response){
+        RankingToShow r = null;
+        try {
+            JSONObject reader = new JSONObject(response);
+            JSONObject ranking = reader.getJSONObject("ranking");
+            String global = ranking.getString("global");
+
+            r = new RankingToShow(global);
+
+            JSONArray jarray = ranking.getJSONArray("result");
+            for(int i=0; i<jarray.length(); ++i){
+                JSONObject obj_tmp = jarray.getJSONObject(i);
+                //JSONObject obj_tmp_1 = obj_tmp.getJSONObject("monument");
+                String description = obj_tmp.getString("monument desc");
+                String numQ = obj_tmp.getString("numQuestions");
+                String numCQ = obj_tmp.getString("numCorrectQuestions");
+                String t =  obj_tmp.getString("total");
+                r.insert(description, numQ, numCQ, t);
+            }
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return r;
+
+    }
 }
 
 
