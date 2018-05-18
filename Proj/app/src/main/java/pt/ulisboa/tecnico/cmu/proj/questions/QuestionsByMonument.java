@@ -8,8 +8,10 @@ public class QuestionsByMonument {
 	
 	public QuestionsByMonument(String m) {
 		this.id = m;
+
 		questions = new ArrayList<Question>();
 	}
+
 
 	public void addQuestion(Question q) {
 		questions.add(q);

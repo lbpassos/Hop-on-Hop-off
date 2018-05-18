@@ -1,0 +1,7 @@
+#Internal package file, do not edit.
+#Fri May 18 06:41:21 WEST 2018
+0.baseType=DIRECTORY
+0.base=/afs/.ist.utl.pt/users/0/0/ist426300/Documents/cmu/labs/lab_4/Termite-WifiP2P-MsgSender/Termite-WifiP2P-MsgSender/build/intermediates/transforms/dexMerger/debug/19
+0.path=classes.dex
+0.set=DEX
+count=1

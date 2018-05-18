@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="pt.ulisboa.tecnico.cmu.proj">
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="HopOnCMU"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        tools:replace="android:icon"
         android:theme="@style/AppTheme">
         <activity android:name="pt.ulisboa.tecnico.cmu.proj.MainActivity">
             <intent-filter>
@@ -21,7 +22,10 @@
         <activity android:name="pt.ulisboa.tecnico.cmu.proj.ListMonumentsActivity"/>
         <activity android:name="pt.ulisboa.tecnico.cmu.proj.AnswerQuizActivity"/>
         <activity android:name="pt.ulisboa.tecnico.cmu.proj.RankingActivity"/>
-        <activity android:name="pt.ulisboa.tecnico.cmu.proj.QuizActivity"></activity>
+        <activity android:name="pt.ulisboa.tecnico.cmu.proj.QuizActivity"/>
+        <activity android:name="pt.ulisboa.tecnico.cmu.proj.peerscanner.PeerScannerActivity"></activity>
+        <service android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService"/>
+
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
 

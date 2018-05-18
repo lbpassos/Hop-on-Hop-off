@@ -1,0 +1,4 @@
+#Fri May 18 06:18:15 WEST 2018
+base.0=/afs/.ist.utl.pt/users/0/0/ist426300/Documents/cmu/labs/lab_4/Termite-WifiP2P-MsgSender/Termite-WifiP2P-MsgSender/build/intermediates/transforms/dexMerger/debug/4
+path.0=classes.dex
+renamed.0=classes.dex

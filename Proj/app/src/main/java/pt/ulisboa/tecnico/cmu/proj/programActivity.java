@@ -17,6 +17,7 @@ import android.widget.TextView;
 import pt.ulisboa.tecnico.cmu.proj.command.Command;
 import pt.ulisboa.tecnico.cmu.proj.command.LogOutCommand;
 import pt.ulisboa.tecnico.cmu.proj.dummyclient.asynctask.DummyTask;
+import pt.ulisboa.tecnico.cmu.proj.peerscanner.PeerScannerActivity;
 
 public class programActivity extends AppCompatActivity {
 
@@ -86,6 +87,7 @@ public class programActivity extends AppCompatActivity {
                 switch(selectedItem){
                     case 0: // List Tour Locations
                         Log.d("ListView", "------ List Tour Locations");
+                        //intent = new Intent(programActivity.this, PeerScannerActivity.class);
                         intent = new Intent(programActivity.this, ListMonumentsActivity.class);
                         startActivity(intent);
                         break;
