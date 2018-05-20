@@ -27,13 +27,17 @@ public class AnswerQuiz { //Just for dealing with the answer
 	private String monumentId_upload;
 	private String sessionId;
 	private String username;
+	private long timeStamp;
+	
 	private ArrayList<AnswersBoolean> quest;
 	
-	public AnswerQuiz(String md, String mu, String sid, String user) {
+	public AnswerQuiz(String md, String mu, String sid, String user, String timeStamp) {
 		this.monumentId_download = md;
 		this.monumentId_upload = mu;
 		this.sessionId = sid;
 		this.username = user;
+		this.timeStamp = Long.valueOf(timeStamp);
+		
 		quest = new ArrayList<AnswersBoolean>();
 	}
 	
@@ -63,6 +67,10 @@ public class AnswerQuiz { //Just for dealing with the answer
 	
 	public String getPlaceOfUpload() {
 		return monumentId_upload;
+	}
+	
+	public long getTimeStamp() {
+		return timeStamp;
 	}
 
 }

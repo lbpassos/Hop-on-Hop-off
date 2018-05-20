@@ -29,6 +29,10 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
         super();
         this.mActivity = activity;
     }
+    public SimWifiP2pBroadcastReceiver(MsgSenderActivity activity) {
+        super();
+        this.mActivity = activity;
+    }
 
 
     @Override
@@ -77,6 +81,11 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
     				Toast.LENGTH_SHORT).show();
 
         } else if (SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION.equals(action)) {
+
+            if( mActivity instanceof MsgSenderActivity){
+                MsgSenderActivity a = (MsgSenderActivity)mActivity;
+                a.teste();
+            }
 
         	SimWifiP2pInfo ginfo = (SimWifiP2pInfo) intent.getSerializableExtra(
         			SimWifiP2pBroadcast.EXTRA_GROUP_INFO);

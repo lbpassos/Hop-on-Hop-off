@@ -39,6 +39,8 @@ import pt.ulisboa.tecnico.cmu.proj.quiz.ChildItemsInfo;
 import pt.ulisboa.tecnico.cmu.proj.quiz.GroupItemsInfo;
 import pt.ulisboa.tecnico.cmu.proj.quiz.RankingCurrentQuiz;
 
+import static android.os.SystemClock.elapsedRealtime;
+
 
 public class AnswerQuizActivity extends AppCompatActivity implements
         SimWifiP2pManager.PeerListListener {
@@ -83,6 +85,9 @@ public class AnswerQuizActivity extends AppCompatActivity implements
                         qm.getQuestion(i).getChoiceObj(j).setStatus( status );
                     }
                 }
+                long timeFromSave = elapsedRealtime ();//Time from save. Answer time
+                editor.putString("TimeFromSave", Long.toString(timeFromSave) ); //store monumentId download
+                editor.commit(); // commit changes
 
                 //Save object
                 Gson gson = new Gson(); //added in gradle
@@ -111,7 +116,12 @@ public class AnswerQuizActivity extends AppCompatActivity implements
                 }
 
                 // DO NOT FORGET THE ID of the MONUMENT must be subtracted by one
-                String json = JsonHandler.UploadAnswerQuizToServer(user, sid, String.valueOf(currentMonument_ID-1), qm);
+                String timeOfQuizArrival = pref.getString("TimeFromDownload",null);
+                String timeOfQuizSave = pref.getString("TimeFromSave",null);
+
+                long finalTime = Long.parseLong(timeOfQuizSave, 10) - Long.parseLong(timeOfQuizArrival, 10); //time
+
+                String json = JsonHandler.UploadAnswerQuizToServer(user, sid, String.valueOf(currentMonument_ID-1), qm, Long.toString(finalTime));
                 //Log.d("-----Lit Monuments----- Message", json);
                 c = new UploadQuizCommand( json );
                 new DummyTask(AnswerQuizActivity.this, c).execute();
@@ -140,15 +150,12 @@ public class AnswerQuizActivity extends AppCompatActivity implements
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
 
-
-        //Load object
         Gson gson = new Gson();
         String json = pref.getString("questions", "");
         qm = gson.fromJson(json, QuestionsByMonument.class);
-        if(qm==null){
-            finish();
-            return;
-        }
+
+
+
         for(int i=0; i<qm.getSize(); ++i){
             Question q = qm.getQuestion(i);
             GroupItemsInfo gi1 = new GroupItemsInfo(q.getQuestion());
@@ -196,7 +203,7 @@ public class AnswerQuizActivity extends AppCompatActivity implements
         SharedPreferences.Editor editor = pref.edit();
 
         String[] tmp = JsonHandler.UploadAnswerQuizFromServer(reply);
-        RankingCurrentQuiz rq = new RankingCurrentQuiz(tmp[0], tmp[1], tmp[2]);
+        RankingCurrentQuiz rq = new RankingCurrentQuiz(tmp[0], tmp[1], tmp[2], tmp[3]); //Current quiz to share
 
         Gson gson = new Gson(); //added in gradle
         String json = gson.toJson(rq);

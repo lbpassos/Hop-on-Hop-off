@@ -20,6 +20,12 @@ class CompareByMonument implements Comparator<User> {
 		if(o1.getNumberOfCorrectQuestionsAnswered(m)>o2.getNumberOfCorrectQuestionsAnswered(m)) {
 			return 1;
 		}
+		if(o1.getNumberOfCorrectQuestionsAnswered(m)==o2.getNumberOfCorrectQuestionsAnswered(m) && o1.getTimeOfResponse(m)<o2.getTimeOfResponse(m)) {
+			return 1;
+		}
+		if(o1.getNumberOfCorrectQuestionsAnswered(m)==o2.getNumberOfCorrectQuestionsAnswered(m) && o1.getTimeOfResponse(m)>o2.getTimeOfResponse(m)) {
+			return -1;
+		}
 		if(o1.getNumberOfCorrectQuestionsAnswered(m)==o2.getNumberOfCorrectQuestionsAnswered(m)) {
 			return 0;
 		}

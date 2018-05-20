@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.cmu.proj.server;
 
+import java.sql.Timestamp;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -230,6 +232,7 @@ public class JsonHandler {
 	  { "session id": "x",
 	      "username": "XX",
 	   "monument id": "xx",
+	   "timestamp": "xx",
        "questions": 
           [
             {
@@ -314,6 +317,9 @@ public class JsonHandler {
     	obj_final.put("session id", session_id);
     	obj_final.put("username", username);
     	
+    	//Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //get the timestamp
+    	//obj_final.put("timestamp", timestamp.toString());
+    	
     	
     	JSONObject obj_toReturn = new JSONObject(); 
     	obj_toReturn.put("download quiz", obj_final);
@@ -333,6 +339,7 @@ public class JsonHandler {
 	      "username": "XX",
 	   "monument id download": "xx",
 	   "monument id upload": "xx",
+	   "timeOfQuizAnswer": "xx",
        "questions":
           [
             {
@@ -371,8 +378,9 @@ public class JsonHandler {
         	String username = teste_1.get("username").toString();
         	String monuDown = teste_1.get("monument id download").toString();
         	String monuUp = teste_1.get("monument id upload").toString();
+        	String timeStamp = teste_1.get("timeOfQuizAnswer").toString();
         	
-        	aq = new AnswerQuiz(monuDown, monuUp, sid, username);
+        	aq = new AnswerQuiz(monuDown, monuUp, sid, username, timeStamp);
         	
         	JSONArray array_t = (JSONArray)teste_1.get("questions");
         	for(int i=0; i<array_t.size(); ++i) {
@@ -406,7 +414,7 @@ public class JsonHandler {
                 }
             }
         */
-        public static String UploadAnswerQuizFromServer(String sid, String user, String m, String numQ, String numCQ){
+        public static String UploadAnswerQuizFromServer(String sid, String user, String m, String numQ, String numCQ, String ts){
             String tmp = "";
             try {
                 JSONObject reader = new JSONObject();
@@ -415,6 +423,7 @@ public class JsonHandler {
                 reader.put("Monument description", m);
                 reader.put("Number of Questions Answered", numQ);
                 reader.put("Number of Correct Questions", numCQ);
+                reader.put("TimeStamp", ts);
                 
                 JSONObject UploadAnswerQuiz = new JSONObject();
                 UploadAnswerQuiz.put("upload quiz", reader);

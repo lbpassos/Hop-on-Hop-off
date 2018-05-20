@@ -17,6 +17,7 @@ import android.widget.TextView;
 import pt.ulisboa.tecnico.cmu.proj.command.Command;
 import pt.ulisboa.tecnico.cmu.proj.command.LogOutCommand;
 import pt.ulisboa.tecnico.cmu.proj.dummyclient.asynctask.DummyTask;
+import pt.ulisboa.tecnico.cmu.proj.peerscanner.MsgSenderActivity;
 import pt.ulisboa.tecnico.cmu.proj.peerscanner.PeerScannerActivity;
 
 public class programActivity extends AppCompatActivity {
@@ -108,7 +109,8 @@ public class programActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case 4: //Share Progress
-                        Log.d("ListView", "----- Share Progress");
+                        intent = new Intent(programActivity.this, MsgSenderActivity.class);
+                        startActivity(intent);
                         break;
                     case 5: //Log Out
                         //Terminate connection with the server

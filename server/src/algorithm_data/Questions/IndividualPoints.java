@@ -9,10 +9,12 @@ import authentication.User;
 class Answers{
 	private int numOfQuestions;
 	private int numOfCorrectAnswers;
+	private long timeStamp;
 	
-	public Answers(int nq, int ncq) {
+	public Answers(int nq, int ncq, long t) {
 		numOfQuestions = nq;
 		numOfCorrectAnswers = ncq;
+		this.timeStamp = t;
 	}
 	
 	public int get_numOfQuestions() {
@@ -20,6 +22,9 @@ class Answers{
 	}
 	public int get_numOfCorrectAnswers() {
 		return numOfCorrectAnswers;
+	}
+	public long get_TimeStamp() {
+		return timeStamp;
 	}
 }
 
@@ -35,8 +40,8 @@ public class IndividualPoints{
 		trip = new HashMap<Monument, Answers>();
 	}
 	
-	public void addPoints_byMonument(Monument m, int nq, int ncq) {
-		trip.put(m, new Answers(nq, ncq));
+	public void addPoints_byMonument(Monument m, int nq, int ncq, long t) {
+		trip.put(m, new Answers(nq, ncq, t));
 	}
 	
 	public int getNumberOfQuestionsAnswered(Monument m) {
@@ -64,6 +69,12 @@ public class IndividualPoints{
 		return total;
 	}
 	
+	public long getTimeOfResponse(Monument m) { //return timestamp by monument
+		if(trip.get(m)==null) {
+			return 0;
+		}
+		return trip.get(m).get_TimeStamp(); 
+	}
 	/*public User getUser() {
 		return user;
 	}*/
@@ -83,5 +94,6 @@ public class IndividualPoints{
 		}
 		return false;
 	}*/
+	
 
 }

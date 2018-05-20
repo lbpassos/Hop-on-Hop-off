@@ -8,11 +8,13 @@ public class RankingCurrentQuiz { //Current ranking
     private String numQuestions;
     private String numAnswers;
     private String monumenDesc;
+    private String timeStamp;
 
-    public RankingCurrentQuiz(String numQuestions, String numAnswers, String monumenDesc){
+    public RankingCurrentQuiz(String numQuestions, String numAnswers, String monumenDesc, String ts){
         this.numQuestions = numQuestions;
         this.numAnswers = numAnswers;
         this.monumenDesc = monumenDesc;
+        this.timeStamp = ts;
     }
 
     public String getNumQuestions(){
@@ -23,5 +25,8 @@ public class RankingCurrentQuiz { //Current ranking
     }
     public String getmonumenDesc(){
         return monumenDesc;
+    }
+    public String getTimeStamp(){
+        return timeStamp;
     }
 }

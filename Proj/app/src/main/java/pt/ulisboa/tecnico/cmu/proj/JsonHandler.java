@@ -246,6 +246,7 @@ public class JsonHandler {
 	      "username": "XX",
 	   "monument id download": "xx",
 	   "monument id upload": "xx",
+	   "timeOfQuizAnswer": "xx",
        "questions":
           [
             {
@@ -268,7 +269,7 @@ public class JsonHandler {
 	  }
 	}
     */
-    public static String UploadAnswerQuizToServer(String user, String sid, String monumentId_u, QuestionsByMonument qbm){
+    public static String UploadAnswerQuizToServer(String user, String sid, String monumentId_u, QuestionsByMonument qbm, String tStamp){
 
         //get full size of objects
         int total_choices = 0;
@@ -318,6 +319,7 @@ public class JsonHandler {
             obj_final.put("monument id download", qbm.getMonument());
             obj_final.put("session id", sid);
             obj_final.put("username", user);
+            obj_final.put("timeOfQuizAnswer", tStamp);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -344,13 +346,14 @@ public class JsonHandler {
             }
         */
         public static String[] UploadAnswerQuizFromServer(String response){
-            String[] tmp = new String[3];
+            String[] tmp = new String[4];
             try {
                 JSONObject reader = new JSONObject(response);
                 JSONObject UploadAnswerQuiz = reader.getJSONObject("upload quiz");
                 tmp[0] = UploadAnswerQuiz.getString("Number of Questions Answered");
                 tmp[1] = UploadAnswerQuiz.getString("Number of Correct Questions");
                 tmp[2] = UploadAnswerQuiz.getString("Monument description");
+                tmp[3] = UploadAnswerQuiz.getString("TimeStamp");
             }
             catch(Exception e){
                 e.printStackTrace();

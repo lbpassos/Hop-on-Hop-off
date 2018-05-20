@@ -43,6 +43,8 @@ import pt.ulisboa.tecnico.cmu.proj.questions.QuestionsByMonument;
 import pt.ulisboa.tecnico.cmu.proj.quiz.ChildItemsInfo;
 import pt.ulisboa.tecnico.cmu.proj.quiz.GroupItemsInfo;
 
+import static android.os.SystemClock.elapsedRealtime;
+
 
 public class QuizActivity extends AppCompatActivity implements
         PeerListListener {
@@ -117,6 +119,14 @@ public class QuizActivity extends AppCompatActivity implements
 
         qm = JsonHandler.DownloadQuizFromServer(reply);
 
+        long timeFromDownload = elapsedRealtime ();//Time from download
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putString("TimeFromDownload", Long.toString(timeFromDownload) ); //store monumentId download
+        editor.commit(); // commit changes
+
+
         for(int i=0; i<qm.getSize(); ++i){
             Question q = qm.getQuestion(i);
             GroupItemsInfo gi1 = new GroupItemsInfo(q.getQuestion());
@@ -171,7 +181,11 @@ public class QuizActivity extends AppCompatActivity implements
                     }
                 }
 
-               //Save object
+                long timeFromSave = elapsedRealtime ();//Time from save. Answer time
+                editor.putString("TimeFromSave", Long.toString(timeFromSave) ); //store monumentId download
+                editor.commit(); // commit changes
+
+               //Save object in memory
                 Gson gson = new Gson(); //added in gradle
                 String json = gson.toJson(qm);
                 editor.putString("questions", json);

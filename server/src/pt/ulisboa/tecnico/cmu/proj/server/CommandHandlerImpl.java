@@ -305,10 +305,10 @@ public class CommandHandlerImpl implements CommandHandler {
 					total += q_tmp.getNumCorrectAnswers(user_code.getVals(i));
 				}
 				//Update ranking
-				u.getPoints().addPoints_byMonument(Server.monuments[Integer.parseInt(user_code.getPlaceOfDownload())-1], qbm.getSize(), total);
+				u.getPoints().addPoints_byMonument(Server.monuments[Integer.parseInt(user_code.getPlaceOfDownload())-1], qbm.getSize(), total, user_code.getTimeStamp());
 				Server.ranking.insert(u);//ranking updated
 				Server.users.insert(u);//user updated
-				message = JsonHandler.UploadAnswerQuizFromServer(user_code.getSessionID(), user_code.getUsername(), Server.monuments[Integer.parseInt(user_code.getPlaceOfDownload())-1].getMonumentDescription(), String.valueOf(qbm.getSize()), String.valueOf(total));
+				message = JsonHandler.UploadAnswerQuizFromServer(user_code.getSessionID(), user_code.getUsername(), Server.monuments[Integer.parseInt(user_code.getPlaceOfDownload())-1].getMonumentDescription(), String.valueOf(qbm.getSize()), String.valueOf(total), Long.toString(user_code.getTimeStamp()));
 			}
 			else {
 				message = "Invalid Session Id";
@@ -346,20 +346,7 @@ public class CommandHandlerImpl implements CommandHandler {
 					}
 				}
 				
-				/*boolean flag = false;
-				for(int i=0; i<Server.monuments.length; ++i) {
-					Ranking[] r = Server.ranking.global(); //Sorted global
-					for(int j=0; j<r.length; ++j) {
-						if(r[j].getUser().equals(u.getName())) {
-							rts = new RankingToSend( String.valueOf(j) ); //globalvalue
-							flag = true;
-							break;
-						}
-					}
-					if(flag) {
-						break;
-					}
-				}*/
+				
 				if(rts==null) { //not existent
 					rts = new RankingToSend( "-" ); //globalvalue
 					rts.insert("-", "-", "-", "-");

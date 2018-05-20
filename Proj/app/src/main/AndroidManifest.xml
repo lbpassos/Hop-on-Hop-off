@@ -23,6 +23,8 @@
         <activity android:name="pt.ulisboa.tecnico.cmu.proj.AnswerQuizActivity"/>
         <activity android:name="pt.ulisboa.tecnico.cmu.proj.RankingActivity"/>
         <activity android:name="pt.ulisboa.tecnico.cmu.proj.QuizActivity"/>
+        <activity android:name="pt.ulisboa.tecnico.cmu.proj.peerscanner.MsgSenderActivity"/>
+        <activity android:name="pt.ulisboa.tecnico.cmu.proj.peerscanner.NeighbourAdd"/>
         <activity android:name="pt.ulisboa.tecnico.cmu.proj.peerscanner.PeerScannerActivity"></activity>
         <service android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService"/>
 
