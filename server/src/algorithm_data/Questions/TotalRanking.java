@@ -17,7 +17,7 @@ class CompareByMonument implements Comparator<User> {
 		IndividualPoints o1 = u1.getPoints();
 		IndividualPoints o2 = u2.getPoints();
 		
-		if(o1.getNumberOfCorrectQuestionsAnswered(m)>o2.getNumberOfCorrectQuestionsAnswered(m)) {
+		if(o1.getNumberOfCorrectQuestionsAnswered(m)<o2.getNumberOfCorrectQuestionsAnswered(m)) {
 			return 1;
 		}
 		if(o1.getNumberOfCorrectQuestionsAnswered(m)==o2.getNumberOfCorrectQuestionsAnswered(m) && o1.getTimeOfResponse(m)<o2.getTimeOfResponse(m)) {
@@ -43,7 +43,7 @@ class CompareByTotal implements Comparator<User> {
 		int total_o1 = o1.getTotalPoints();
 		int total_o2 = o2.getTotalPoints();
 		
-		if(total_o1>total_o2) {
+		if(total_o1<total_o2) {
 			return 1;
 		}
 		if(total_o1==total_o2) {
@@ -63,7 +63,7 @@ public class TotalRanking {
 	public void insert(User ip) {
 		if( total.contains(ip)==true ) {
 			total.remove(ip);
-			total.add(ip);
+			//total.add(ip);
 			
 		}
 		total.add(ip);

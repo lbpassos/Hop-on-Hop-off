@@ -357,7 +357,7 @@ public class CommandHandlerImpl implements CommandHandler {
 						r = Server.ranking.sortByMonument(Server.monuments[i]); //Sorted by monument
 						for(int j=0; j<r.length; ++j) {
 							if(r[j].getUser().equals(u.getName())) {
-								rts.insert(Server.monuments[i].getMonumentDescription(), String.valueOf(u.getPoints().getNumberOfQuestionsAnswered(Server.monuments[i])), String.valueOf(u.getPoints().getNumberOfCorrectQuestionsAnswered(Server.monuments[i])), String.valueOf(r[j].getPoints()));
+								rts.insert(Server.monuments[i].getMonumentDescription(), String.valueOf(u.getPoints().getNumberOfQuestionsAnswered(Server.monuments[i])), String.valueOf(u.getPoints().getNumberOfCorrectQuestionsAnswered(Server.monuments[i])), String.valueOf(j+1)/*String.valueOf(r[j].getPoints())*/);
 								flag = true;
 								break;
 							}
